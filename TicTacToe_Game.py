@@ -6,17 +6,18 @@ from tkinter import font
 from typing import NamedTuple
 
 class Player(NamedTuple):
-    lable: str
+    label: str
     color: str
 
 class Move(NamedTuple):
     row: int
     col: int
     label: str = ""
-    BOARD_SIZE = 9
-    DEFAULT_PLAYERS = (
-        Player(label="X", color="blue"),
-        Player(label="O", color="red"),
+
+BOARD_SIZE = 9
+DEFAULT_PLAYERS = (
+    Player(label="X", color="blue"),
+    Player(label="O", color="red"),
     )
 
 class TicTacToe_Logic:
@@ -84,13 +85,13 @@ class TicTacToe_Board(tk.Tk):
         clicked_btn = event.widget
         row, col = self._cells[clicked_btn]
         move = Move(row, col, self._game.current_player.label)
-        if self._game.is_valid_move(move):
-            self._update_button(clicked_btn)
-            self._game.process_move(move)
-            self._game.toggle_player()
+        self._update_button(clicked_btn)
+        #self._game.process_move(move)
+        self._game.toggle_player()
 
 def main():
-    board = TicTacToe_Board()
+    game = TicTacToe_Logic()
+    board = TicTacToe_Board(game)
     board.mainloop()
 
 if __name__ == "__main__":
