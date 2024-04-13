@@ -8,6 +8,7 @@ from typing import NamedTuple
 class Player(NamedTuple):
     label: str
     color: str
+    font: str
 
 class Move(NamedTuple):
     row: int
@@ -16,8 +17,8 @@ class Move(NamedTuple):
 
 BOARD_SIZE = 9
 DEFAULT_PLAYERS = (
-    Player(label="X", color="blue"),
-    Player(label="O", color="red"),
+    Player(label="X", color="blue", font="14"),
+    Player(label="O", color="red", font="14"),
     )
 
 class TicTacToe_Logic:
@@ -54,8 +55,12 @@ class TicTacToe_Board(tk.Tk):
         self._create_board_grid()
 
     def _update_button(self, clicked_btn):
-        clicked_btn.config(text=self._game.current_player.label)
-        clicked_btn.config(fg=self._game.current_player.color)
+        if(clicked_btn['text']=='X' or clicked_btn['text']=='O'):
+            clicked_btn.config(text="")
+        else:
+            clicked_btn.config(text=self._game.current_player.label)
+            clicked_btn.config(fg=self._game.current_player.color)
+            #clicked_btn.config(font=self._game.current_player.font)
 
     def _create_board_display(self):
         display_frame = tk.Frame(master=self)
