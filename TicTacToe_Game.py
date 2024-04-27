@@ -15,7 +15,7 @@ class Move(NamedTuple):
     col: int
     label: str = ""
 
-BOARD_SIZE = 9
+BOARD_SIZE = 3
 DEFAULT_PLAYERS = (
     Player(label="X", color="blue", font="14"),
     Player(label="O", color="red", font="14"),
@@ -29,12 +29,14 @@ class TicTacToe_Logic:
         self.winner_combo = []
         self._current_moves = []
         self._has_winner = False
+        self._winning_combos = []
         self._setup_board()
 
     def _setup_board(self):
         self._current_moves = [
             [Move(row, col) for col in range(self.board_size)]
             for row in range(self.board_size)]
+        self._winning_combos = self._get_winning_combos
         
     def valid_move(self, move):
         row, col = move.row, move.col
@@ -44,6 +46,14 @@ class TicTacToe_Logic:
     
     def toggle_player(self):
         self.current_player = next(self._players)
+
+    def _get_winning_combos(self):
+        rows = [
+            [(move.row, move.col) for move in row]
+            for row in self._current_moves
+        ]
+        columns = [list(col) for col in zip(*rows)]
+        return rows + columns
 
 class TicTacToe_Board(tk.Tk):
     def __init__(self, game):
@@ -72,19 +82,24 @@ class TicTacToe_Board(tk.Tk):
         self.display.pack()
 
     def _create_board_grid(self):
-        grid_frame = tk.Frame(master=self)
-        grid_frame.pack()
+        for i in range(self._game.board_size):
+            
+            grid_frame = tk.Frame(master=self, highlightbackground="black", highlightthickness=2, bd=0)
+            grid_frame.pack()
+            
+            for j in range(self._game.board_size):
         
-        for row in range(self._game.board_size):
-            self.rowconfigure(row, weight=1, minsize=50)
-            self.columnconfigure(row, weight=1, minsize=50)
-            for col in range(self._game.board_size):
-                button = tk.Button(master=grid_frame, text="", font=font.Font(size=5, weight="bold"), width=8, height=5)
-                self._cells[button] = (row, col)
-                button.grid(row=row, column=col)
+                for row in range(self._game.board_size):
+                    self.rowconfigure(row, weight=1, minsize=50)
+                    self.columnconfigure(row, weight=1, minsize=50)
+                    for col in range(self._game.board_size):
+                        button = tk.Button(master=grid_frame, text="", font=font.Font(size=5, weight="bold"), width=8, height=5)
+                        self._cells[button] = (row, col)
+                        button.grid(row=row, column=col)
 
-                self._cells[button] = (row, col)
-                button.bind("<ButtonPress-1>", self.play)
+                        self._cells[button] = (row, col)
+                        button.bind("<ButtonPress-1>", self.play)
+
 
     def play(self, event):
         clicked_btn = event.widget
