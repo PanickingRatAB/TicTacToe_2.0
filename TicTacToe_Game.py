@@ -84,16 +84,19 @@ class TicTacToe_Board(tk.Tk):
     def _create_board_grid(self):
         for i in range(self._game.board_size):
             
-            grid_frame = tk.Frame(master=self, highlightbackground="black", highlightthickness=2, bd=0)
-            grid_frame.pack()
-            
+            grid_frameb = tk.Frame(master=self, highlightbackground="black", highlightthickness=1, bd=0)
+            grid_frameb.pack(side="left")
+
             for j in range(self._game.board_size):
+                grid_framea = tk.Frame(master=grid_frameb, highlightbackground="black", highlightthickness=1, bd=0)
+                grid_framea.pack(side="top")
         
                 for row in range(self._game.board_size):
                     self.rowconfigure(row, weight=1, minsize=50)
                     self.columnconfigure(row, weight=1, minsize=50)
+
                     for col in range(self._game.board_size):
-                        button = tk.Button(master=grid_frame, text="", font=font.Font(size=5, weight="bold"), width=8, height=5)
+                        button = tk.Button(master=grid_framea, text="", font=font.Font(size=5, weight="bold"), width=8, height=5)
                         self._cells[button] = (row, col)
                         button.grid(row=row, column=col)
 
