@@ -8,7 +8,7 @@ from typing import NamedTuple
 class Player(NamedTuple):
     label: str
     color: str
-    font: str
+    background: str
 
 class Move(NamedTuple):
     row: int
@@ -17,8 +17,8 @@ class Move(NamedTuple):
 
 BOARD_SIZE = 3
 DEFAULT_PLAYERS = (
-    Player(label="X", color="blue", font="14"),
-    Player(label="O", color="red", font="14"),
+    Player(label="X", color="blue", background='skyblue'),
+    Player(label="O", color="red", background='#e8956f'),
     )
 
 class TicTacToe_Logic:
@@ -47,6 +47,11 @@ class TicTacToe_Logic:
     def toggle_player(self):
         self.current_player = next(self._players)
 
+    def process_move(self, move):
+        row, col = move.row, move.col
+        self._current_moves[row][col] = move
+        print(move)
+
     def _get_winning_combos(self):
         rows = [
             [(move.row, move.col) for move in row]
@@ -67,10 +72,11 @@ class TicTacToe_Board(tk.Tk):
     def _update_button(self, clicked_btn):
         if(clicked_btn['text']=='X' or clicked_btn['text']=='O'):
             clicked_btn.config(text="")
+            clicked_btn.config(bg="#f0f0f0")
         else:
             clicked_btn.config(text=self._game.current_player.label)
             clicked_btn.config(fg=self._game.current_player.color)
-            #clicked_btn.config(font=self._game.current_player.font)
+            clicked_btn.config(bg=self._game.current_player.background)
 
     def _create_board_display(self):
         display_frame = tk.Frame(master=self)
@@ -84,12 +90,13 @@ class TicTacToe_Board(tk.Tk):
     def _create_board_grid(self):
         for i in range(self._game.board_size):
             
-            grid_frameb = tk.Frame(master=self, highlightbackground="black", highlightthickness=1, bd=0)
+            grid_frameb = tk.Frame(master=self, bd=0)
             grid_frameb.pack(side="left")
 
             for j in range(self._game.board_size):
                 grid_framea = tk.Frame(master=grid_frameb, highlightbackground="black", highlightthickness=1, bd=0)
                 grid_framea.pack(side="top")
+                print(i, j)
         
                 for row in range(self._game.board_size):
                     self.rowconfigure(row, weight=1, minsize=50)
@@ -109,7 +116,7 @@ class TicTacToe_Board(tk.Tk):
         row, col = self._cells[clicked_btn]
         move = Move(row, col, self._game.current_player.label)
         self._update_button(clicked_btn)
-        #self._game.process_move(move)
+        self._game.process_move(move)
         self._game.toggle_player()
 
 def main():
