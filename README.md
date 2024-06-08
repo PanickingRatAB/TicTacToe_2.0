@@ -1,6 +1,6 @@
 A 9x9 Tic Tac Toe grid to play against friends.
 
-How to PLay
+How to Play
 
 Player one chooses any of the small boards that they want to and plays anywhere on that board.
 On player two’s turn, they don't have the freedom to go anywhere that they want to.
